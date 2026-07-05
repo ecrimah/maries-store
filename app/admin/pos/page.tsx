@@ -745,11 +745,16 @@ export default function POSPage() {
         const is80 = paperWidth === '80';
         const pageSize = is80 ? '80mm auto' : '58mm auto';
         const sideMargin = is80 ? '4mm' : '5mm';
-        const bodyWidth = is80 ? '72mm' : '48mm';
-        // Column widths for the items table (must sum to bodyWidth)
-        const nameColW = is80 ? '40mm' : '24mm';
-        const qtyColW = is80 ? '8mm' : '6mm';
-        const priceColW = is80 ? '24mm' : '18mm';
+        // Keep the content body NARROWER than the printable area so the
+        // right-aligned price/TOTAL column can never be clipped by paper-feed
+        // drift or the print head's non-printable right strip. We reserve a
+        // ~3mm safety gap on the right in addition to the @page side margin.
+        const bodyWidth = is80 ? '68mm' : '45mm';
+        // Column widths for the items table. Intentionally sum to LESS than
+        // bodyWidth (leaving slack) so the Amt column keeps breathing room.
+        const nameColW = is80 ? '38mm' : '23mm';
+        const qtyColW = is80 ? '7mm' : '5mm';
+        const priceColW = is80 ? '23mm' : '17mm';
 
         const escapeHtml = (s: string) =>
             String(s ?? '')
@@ -878,7 +883,7 @@ export default function POSPage() {
         margin-top: 0.5mm;
     }
     table.totals td.lbl {
-        width: ${is80 ? '40mm' : '22mm'};
+        width: ${is80 ? '36mm' : '18mm'};
         font-weight: 700;
         padding: 0.6mm 0;
     }
